@@ -2,7 +2,6 @@
 	background-color: #282c34;
 	min-height: 100vh;
 	display: flex;
-	// flex-direction: column;
 	flex-flow: column;
 	align-items: center;
 	justify-content: center;
@@ -15,4 +14,9 @@
 
 main {
 	padding: 10px;
+}
+
+.Layout-Paper {
+	width: 700px;
+	height: 380px;
 }

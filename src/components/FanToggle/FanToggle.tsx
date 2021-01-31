@@ -18,7 +18,7 @@ const FanToggle = () => {
   };
 
   return (
-    <Grid container direction='row' alignItems='center' justify='flex-end'>
+    <Grid container direction='row' alignItems='center' justify='center'>
       <Grid item>
         <ToggleButtonGroup
           size='large'

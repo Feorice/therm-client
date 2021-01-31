@@ -23,12 +23,6 @@ const useStyles = makeStyles(() =>
     inline: {
       display: 'inline',
     },
-    bottomLeftControl: {
-      paddingRight: '24px',
-    },
-    bottomRightControl: {
-      paddingLeft: '24px',
-    },
   }),
 );
 
@@ -58,10 +52,10 @@ const Home = () => {
         </Grid>
       </Grid>
       <Grid container className={classes.grid}>
-        <Grid item xs={6} className={classes.bottomLeftControl}>
+        <Grid item xs={6}>
           <FanToggle />
         </Grid>
-        <Grid item xs={6} className={classes.bottomRightControl}>
+        <Grid item xs={6}>
           <ThermostatToggle />
         </Grid>
       </Grid>

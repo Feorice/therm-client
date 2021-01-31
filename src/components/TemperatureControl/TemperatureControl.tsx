@@ -1,5 +1,4 @@
 import React from 'react';
-// import { Paper } from "@material-ui/core";
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import './TemperatureControl.scss';

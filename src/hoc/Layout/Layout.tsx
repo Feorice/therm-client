@@ -10,7 +10,7 @@ interface IProps {
 
 const AppLayout = (props: IProps = { children: <div /> }): any => (
   <div className='Layout'>
-    <Paper>
+    <Paper className='Layout-Paper'>
       <NavigationBar />
       <main>{props.children}</main>
     </Paper>

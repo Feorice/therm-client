@@ -19,7 +19,7 @@ const ThermostatToggle = () => {
   };
 
   return (
-    <Grid container direction='row' alignItems='center' justify='flex-start'>
+    <Grid container direction='row' alignItems='center' justify='center'>
       <Grid item>
         <ToggleButtonGroup
           size='large'
