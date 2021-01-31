@@ -1,0 +1,56 @@
+.Paper {
+	padding: 1rem;
+	// min-width: 20rem;
+	margin: 5px;
+
+	h3 {
+		margin-top: 0;
+		margin-bottom: 1rem;
+	}
+}
+
+.CurrentTemp {
+	font-size: 8rem;
+	line-height: 6rem;
+	display: inline-block;
+	vertical-align: middle;
+
+	span {
+		font-size: 2rem;
+		line-height: 1.5rem;
+		vertical-align: top;
+		// margin-left: 5px;
+	}
+}
+
+.ControlsContainer {
+	display: inline-block;
+	vertical-align: middle;
+
+	.Controls {
+		position: relative;
+
+		svg {
+			width: 4rem;
+			height: 4rem;
+			display: block;
+		}
+
+		.ControlUp {
+			margin-bottom: -.6rem;
+			margin-top: -2.5rem;
+		}
+
+		.ControlDown {
+			margin-bottom: -2rem;
+			margin-top: -.6rem;
+		}
+
+		.SetTemp {
+			// position: absolute;
+			top: 3.2rem;
+			left: 1.15rem;
+			font-size: 1.5rem;
+		}
+	}
+}

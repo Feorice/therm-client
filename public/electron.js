@@ -8,7 +8,15 @@ const isDev = require('electron-is-dev');
 let mainWindow;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({width: 900, height: 680});
+  // User frame: false for FramelessWindow support
+  mainWindow = new BrowserWindow(
+    {
+      width: 800, 
+      height: 480, 
+      resizable: false,
+      frame: false
+    }
+  );
   mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`);
   if (isDev) {
     // Open the DevTools.
