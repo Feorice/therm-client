@@ -19,7 +19,6 @@ import {
   startChannel,
   stopChannel,
 } from '../../redux/modules/thermostat';
-import { TemperatureUnit } from '../../components/interfaces/TemperatureUnit';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,21 +38,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Settings = (props: any) => {
   const classes = useStyles();
-  const [checked, setChecked] = React.useState(['temp-unit']);
 
   const handleToggle = (event: ChangeEvent<HTMLInputElement>) => {
-    // const currentIndex = checked.indexOf(value);
-    // const newChecked = [...checked];
-
-    // if (currentIndex === -1) {
-    //   newChecked.push(value);
-    // } else {
-    //   newChecked.splice(currentIndex, 1);
-    // }
-
-    // console.log(newChecked);
-    // setChecked(newChecked);
-    console.log(event);
     props.setTemperatureUnit(event.target.checked ? 'C' : 'F');
   };
 
@@ -74,7 +60,6 @@ const Settings = (props: any) => {
     >
       <ListItem>
         <ListItemIcon className={classes.listItemIcon}>
-          {/* <WifiIcon /> */}
           <InlineIcon icon={ThermometerIcon} className={classes.icon} />
         </ListItemIcon>
         <ListItemText
@@ -109,5 +94,3 @@ const mapStateToProps = (state: any) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);
-
-// export default Settings;

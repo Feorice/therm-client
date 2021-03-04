@@ -55,11 +55,7 @@ const Home = (props: any) => {
     temperatureView: false,
   });
 
-  // const temperature =
-  //   props.temperatureUnit === 'C'
-  //     ? props.currentTemperature
-  //     : (props.currentTemperature * (9 / 5) + 32).toFixed(0);
-
+  // For skeleton crew...
   useEffect(() => {
     setTimeout(() => {
       setState((prevState: IState) => ({
@@ -86,29 +82,7 @@ const Home = (props: any) => {
   }, [props.serverStatus]);
 
   const changeSetTemperature = (change: 'increment' | 'decrement'): void => {
-    console.log(change);
-    const prevAdjustedTemperature: string = props.adjustedTemperature;
-    const newAdjustedTemperature = change
-      ? parseInt(prevAdjustedTemperature) + 1
-      : parseInt(prevAdjustedTemperature) - 1;
-
     props.setAdjustedTemperature(change);
-
-    // setState((prevState: IState) => {
-    //   const prevSetTemp: number = parseInt(
-    //     prevState?.temperatureControl?.setTemperature,
-    //   );
-
-    //   const newSetTemp = change ? prevSetTemp + 1 : prevSetTemp - 1;
-
-    //   return {
-    //     ...prevState,
-    //     temperatureControl: {
-    //       ...prevState.temperatureControl,
-    //       setTemperature: newSetTemp.toString(),
-    //     },
-    //   };
-    // });
   };
 
   return (
@@ -171,7 +145,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 };
 
 const mapStateToProps = (state: any) => ({
-  // tasks: topTaskSelector(state),
   currentTemperature: currentTemperatureSelector(state),
   currentHumidty: currentHumiditySelector(state),
   adjustedTemperature: state.thermostatReducer.adjustedTemperature,

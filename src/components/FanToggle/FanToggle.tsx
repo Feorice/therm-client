@@ -7,6 +7,8 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 const FanToggle = (props: any) => {
   const fanSetting = props.setting;
+
+  // Probably get rid of this with full Redux implementation...
   const [alignment, setAlignment] = React.useState('auto');
 
   const handleChange = (

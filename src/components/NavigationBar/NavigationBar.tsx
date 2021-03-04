@@ -28,13 +28,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const NavigationBar = () => {
   const classes = useStyles();
-  // const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setAuth(event.target.checked);
-  // };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
