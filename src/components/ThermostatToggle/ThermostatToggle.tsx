@@ -6,7 +6,8 @@ import PowerOffIcon from '@material-ui/icons/PowerOffOutlined';
 import AcIcon from '@material-ui/icons/AcUnit';
 import HeatIcon from '@material-ui/icons/WhatshotOutlined';
 
-const ThermostatToggle = () => {
+const ThermostatToggle = (props: any) => {
+  const airSetting = props.setting;
   const [alignment, setAlignment] = React.useState('off');
 
   const handleChange = (
@@ -23,7 +24,7 @@ const ThermostatToggle = () => {
       <Grid item>
         <ToggleButtonGroup
           size='large'
-          value={alignment}
+          value={airSetting || alignment}
           exclusive
           onChange={handleChange}
         >

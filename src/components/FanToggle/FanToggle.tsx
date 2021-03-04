@@ -5,7 +5,8 @@ import Grid from '@material-ui/core/Grid';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
-const FanToggle = () => {
+const FanToggle = (props: any) => {
+  const fanSetting = props.setting;
   const [alignment, setAlignment] = React.useState('auto');
 
   const handleChange = (
@@ -22,7 +23,7 @@ const FanToggle = () => {
       <Grid item>
         <ToggleButtonGroup
           size='large'
-          value={alignment}
+          value={fanSetting || alignment}
           exclusive
           onChange={handleChange}
         >

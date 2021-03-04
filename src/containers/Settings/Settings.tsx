@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,6 +9,17 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import Switch from '@material-ui/core/Switch';
 import { InlineIcon } from '@iconify/react';
 import ThermometerIcon from '@iconify/icons-mdi/thermometer-low';
+
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
+
+import {
+  setTemperatureUnit,
+  getInitialThermostatControls,
+  startChannel,
+  stopChannel,
+} from '../../redux/modules/thermostat';
+import { TemperatureUnit } from '../../components/interfaces/TemperatureUnit';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,22 +37,35 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Settings = () => {
+const Settings = (props: any) => {
   const classes = useStyles();
   const [checked, setChecked] = React.useState(['temp-unit']);
 
-  const handleToggle = (value: string) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+  const handleToggle = (event: ChangeEvent<HTMLInputElement>) => {
+    // const currentIndex = checked.indexOf(value);
+    // const newChecked = [...checked];
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
+    // if (currentIndex === -1) {
+    //   newChecked.push(value);
+    // } else {
+    //   newChecked.splice(currentIndex, 1);
+    // }
 
-    setChecked(newChecked);
+    // console.log(newChecked);
+    // setChecked(newChecked);
+    console.log(event);
+    props.setTemperatureUnit(event.target.checked ? 'C' : 'F');
   };
+
+  useEffect(() => {
+    props.startChannel();
+
+    () => props.stopChannel();
+  }, []);
+
+  useEffect(() => {
+    props.getInitialThermostatControls();
+  }, [props.serverStatus]);
 
   return (
     <List
@@ -56,14 +80,14 @@ const Settings = () => {
         <ListItemText
           id='switch-list-label-temp-unit'
           primary={`Temperature Unit: ${
-            checked.indexOf('temp-unit') !== -1 ? 'Celcius' : 'Fahrenheit'
+            props.temperatureUnit === 'C' ? 'Celcius' : 'Fahrenheit'
           }`}
         />
         <ListItemSecondaryAction>
           <Switch
             edge='end'
-            onChange={handleToggle('temp-unit')}
-            checked={checked.indexOf('temp-unit') !== -1}
+            onChange={handleToggle}
+            checked={props.temperatureUnit === 'C' ? true : false}
             inputProps={{ 'aria-labelledby': 'switch-list-label-wifi' }}
           />
         </ListItemSecondaryAction>
@@ -72,4 +96,18 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  startChannel: () => dispatch(startChannel()),
+  stopChannel: () => dispatch(stopChannel()),
+  setTemperatureUnit: (unit: 'C' | 'F') => dispatch(setTemperatureUnit(unit)),
+  getInitialThermostatControls: () => dispatch(getInitialThermostatControls()),
+});
+
+const mapStateToProps = (state: any) => ({
+  temperatureUnit: state.thermostatReducer.temperatureUnit,
+  serverStatus: state.thermostatReducer.serverStatus,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+
+// export default Settings;
