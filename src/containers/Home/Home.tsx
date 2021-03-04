@@ -5,8 +5,8 @@ import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 
 import {
-  currentHumiditySelector,
-  currentTemperatureSelector,
+  // currentHumiditySelector,
+  currentTemperatureSelector, // Do we need these selectors? Maybe for conversions at some point?
   startChannel,
   stopChannel,
   setAdjustedTemperature,
@@ -101,7 +101,7 @@ const Home = (props: any) => {
       </Grid>
       <Grid container direction='row' className={classes.grid}>
         <Grid item xs={6} className={classes.gridItem}>
-          {state.temperatureView ? (
+          {props.serverStatus === 'on' ? (
             <TemperatureControl
               currentTemperature={props.currentTemperature}
               adjustedTemperature={props.adjustedTemperature}
@@ -114,7 +114,7 @@ const Home = (props: any) => {
           )}
         </Grid>
         <Grid item xs={6} className={classes.gridItem}>
-          {state.historyView ? (
+          {props.serverStatus === 'on' ? (
             <HistoricalOverview />
           ) : (
             <Skeleton variant='rect' className={classes.skeleton} />
@@ -146,7 +146,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 
 const mapStateToProps = (state: any) => ({
   currentTemperature: currentTemperatureSelector(state),
-  currentHumidty: currentHumiditySelector(state),
+  // currentHumidty: currentHumiditySelector(state),
+  currentHumidity: state.thermostatReducer.currentHumidity,
   adjustedTemperature: state.thermostatReducer.adjustedTemperature,
   temperatureUnit: state.thermostatReducer.temperatureUnit,
   fanSetting: state.thermostatReducer.fanSetting,

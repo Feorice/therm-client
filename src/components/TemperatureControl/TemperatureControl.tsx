@@ -4,6 +4,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { ITemperatureControlProps } from '../interfaces/TemperatureControl';
 import './TemperatureControl.scss';
 import { TemperatureUnit } from '../interfaces/TemperatureUnit';
+import IconButton from '@material-ui/core/IconButton';
 
 const TemperatureControl = (props: ITemperatureControlProps) => {
   const handleChangeTemperature = (
@@ -20,28 +21,31 @@ const TemperatureControl = (props: ITemperatureControlProps) => {
     props.unit,
   );
 
+  const currentHumidity = props.currentHumidity;
+
   return (
     <div>
       <div className='CurrentTemp'>
         {currentTemperature}
         <span>{props.unit === TemperatureUnit.fahrenheit ? 'F' : 'C'}</span>
       </div>
+      {/* <div>Humidity: {currentHumidity}</div> */}
       <div className='ControlsContainer'>
         <div className='Controls'>
-          <button onClick={() => handleChangeTemperature('increment')}>
+          <IconButton onClick={() => handleChangeTemperature('increment')}>
             <KeyboardArrowUpIcon className='ControlUp' />
-          </button>
-
+          </IconButton>
           <div className='SetTemp'>{adjustedTemperature}</div>
-          <button onClick={() => handleChangeTemperature('decrement')}>
+          <IconButton onClick={() => handleChangeTemperature('decrement')}>
             <KeyboardArrowDownIcon className='ControlDown' />
-          </button>
+          </IconButton>
         </div>
       </div>
     </div>
   );
 };
 
+// In hindsight, this is stupid. Do something else. We won't get accurate adjustments this way.
 const convertTemperatureUnit = (value: number, unit: 'C' | 'F') => {
   return unit === 'C' ? value : (value * (9 / 5) + 32).toFixed(0);
 };

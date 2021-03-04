@@ -27,13 +27,12 @@ const GET_INITIAL_THERMOSTAT_CONTROLS = 'GET_INITIAL_THERMOSTAT_CONTROLS';
 const socketServerURL = 'http://192.168.1.102:8080';
 
 const initialState = {
-  // taskList: [], // Remove
   channelStatus: 'off',
   serverStatus: 'unknown',
   currentHumidity: 0,
   currentTemperature: 0,
-  adjustedTemperature: 50,
-  temperatureUnit: 'F', // Switch back to celcius when settings get implemented.
+  adjustedTemperature: 10, // Based on 10 degrees Celcius. Would be 50 degrees Fahrenheit.
+  temperatureUnit: 'C',
   fanSetting: 'auto',
   airSetting: 'off',
 };
@@ -43,16 +42,11 @@ export default (
   state = initialState,
   action: { type: string; payload: any },
 ) => {
-  // const { taskList } = state;
-  // const updatedTaskList = [...taskList, action.payload];
-
   switch (action.type) {
     case CHANNEL_ON:
       return { ...state, channelStatus: 'on' };
     case CHANNEL_OFF:
       return { ...state, channelStatus: 'off', serverStatus: 'unknown' };
-    // case ADD_TASK:
-    //   return { ...state, taskList: updatedTaskList };
     case SERVER_OFF:
       return { ...state, serverStatus: 'off' };
     case SERVER_ON:
