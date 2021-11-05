@@ -9,13 +9,15 @@ const FanToggle = (props: any) => {
   const fanSetting = props.setting;
 
   // Probably get rid of this with full Redux implementation...
-  const [alignment, setAlignment] = React.useState('auto');
+  const [alignment, setAlignment] = React.useState(fanSetting);
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
     newAlignment: string,
   ) => {
     if (newAlignment !== null) {
+      console.log(newAlignment);
+      props.setFanSetting({ fanSetting: newAlignment });
       setAlignment(newAlignment);
     }
   };
@@ -25,7 +27,7 @@ const FanToggle = (props: any) => {
       <Grid item>
         <ToggleButtonGroup
           size='large'
-          value={fanSetting || alignment}
+          value={alignment}
           exclusive
           onChange={handleChange}
         >

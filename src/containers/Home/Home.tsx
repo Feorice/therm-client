@@ -11,6 +11,7 @@ import {
   stopChannel,
   setAdjustedTemperature,
   getInitialThermostatControls,
+  setFanSetting,
 } from '../../redux/modules/thermostat';
 
 import {
@@ -85,6 +86,10 @@ const Home = (props: any) => {
     props.setAdjustedTemperature(change);
   };
 
+  const onFanChange = (setting: 'on' | 'auto') => {
+    props.setFanSetting(setting);
+  };
+
   return (
     <Fragment>
       <Grid container direction='row' className={classes.grid}>
@@ -123,7 +128,7 @@ const Home = (props: any) => {
       </Grid>
       <Grid container className={classes.grid}>
         <Grid item xs={6}>
-          <FanToggle setting={props.fanSetting} />
+          <FanToggle setting={props.fanSetting} setFanSetting={onFanChange} />
         </Grid>
         <Grid item xs={6}>
           <ThermostatToggle setting={props.airSetting} />
@@ -141,6 +146,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       dispatch(setAdjustedTemperature(change)),
     getInitialThermostatControls: () =>
       dispatch(getInitialThermostatControls()),
+    setFanSetting: (setting: 'on' | 'auto') => {
+      dispatch(setFanSetting(setting));
+    },
   };
 };
 

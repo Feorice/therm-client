@@ -24,6 +24,7 @@ const SET_ADJUSTED_TEMPERATURE = 'SET_ADJUSTED_TEMPERATURE';
 const UPDATE_THERMOSTAT_CONTROLS = 'UPDATE_THERMOSTAT_CONTROLS';
 const SET_TEMPERATURE_UNIT = 'SET_TEMPERATURE_UNIT';
 const GET_INITIAL_THERMOSTAT_CONTROLS = 'GET_INITIAL_THERMOSTAT_CONTROLS';
+const SET_FAN_CONTROL = 'SET_FAN_CONTROL';
 const socketServerURL = 'http://192.168.1.102:8080';
 
 const initialState = {
@@ -55,6 +56,8 @@ export default (
       return { ...state, ...action.payload };
     case UPDATE_THERMOSTAT_CONTROLS:
       return { ...state, ...action.payload };
+    case SET_FAN_CONTROL:
+      return { ...state, ...action.payload };
     default:
       return state;
   }
@@ -72,8 +75,12 @@ export const setTemperatureUnit = (unit: 'C' | 'F') => {
   return { type: SET_TEMPERATURE_UNIT };
 };
 export const getInitialThermostatControls = () => {
-  socket.emit('getInitialThermostatControls', { blah: '1' });
+  socket.emit('getInitialThermostatControls', {});
   return { type: GET_INITIAL_THERMOSTAT_CONTROLS };
+};
+export const setFanSetting = (fanSetting: 'on' | 'auto') => {
+  socket.emit('setControls', { fanSetting });
+  return { type: SET_FAN_CONTROL };
 };
 
 export const currentTemperatureSelector = (state: any) =>
@@ -133,16 +140,18 @@ const createThermostatMetricsChannel = (socket: Socket) =>
     };
   });
 
+// This sets up a channel to receive temperature and humidity updates from backend.
 const createThermostatControlsChannel = (socket: Socket) =>
   eventChannel((emit) => {
-    const handler = (data: unknown) => {
-      emit(data);
-    };
+    const handler = (data: unknown) => emit(data);
+
+    // channels.forEach((channel) => socket.on(channel, handler));
 
     socket.on('updateThermostatControls', handler);
     socket.on('respondInitialThermostatControls', handler);
 
     return () => {
+      // channels.forEach((channel) => socket.off(channel, handler));
       socket.off('updateThermostatControls', handler);
       socket.off('respondInitialThermostatControls', handler);
     };
@@ -182,9 +191,15 @@ const listenServerSaga = function* () {
       createThermostatMetricsChannel,
       socket,
     );
+
+    // const thermostatControlChannels = [
+    //   'updateThermostatControls',
+    //   'respondInitialThermostatControls',
+    // ];
     const thermostatControlsSocketChannel = yield call(
       createThermostatControlsChannel,
       socket,
+      // thermostatControlChannels,
     );
 
     yield all([fork(listenDisconnectSaga), fork(listenConnectSaga)]);
