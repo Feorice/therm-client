@@ -10,8 +10,9 @@ import {
   startChannel,
   stopChannel,
   setAdjustedTemperature,
-  getInitialThermostatControls,
+  getInitialThermostatSettings,
   setFanSetting,
+  setAirSetting,
 } from '../../redux/modules/thermostat';
 
 import {
@@ -79,15 +80,19 @@ const Home = (props: any) => {
   }, []);
 
   useEffect(() => {
-    props.getInitialThermostatControls();
+    props.getInitialThermostatSettings();
   }, [props.serverStatus]);
 
-  const changeSetTemperature = (change: 'increment' | 'decrement'): void => {
+  const onSetTemperature = (change: 'increment' | 'decrement'): void => {
     props.setAdjustedTemperature(change);
   };
 
   const onFanChange = (setting: 'on' | 'auto') => {
     props.setFanSetting(setting);
+  };
+
+  const onAirChange = (setting: 'ac' | 'off' | 'heat') => {
+    props.setAirSetting(setting);
   };
 
   return (
@@ -112,7 +117,7 @@ const Home = (props: any) => {
               adjustedTemperature={props.adjustedTemperature}
               currentHumidity={props.currentHumidity}
               unit={props.temperatureUnit}
-              setAdjustedTemperature={changeSetTemperature}
+              setAdjustedTemperature={onSetTemperature}
             />
           ) : (
             <Skeleton variant='rect' className={classes.skeleton} />
@@ -131,7 +136,10 @@ const Home = (props: any) => {
           <FanToggle setting={props.fanSetting} setFanSetting={onFanChange} />
         </Grid>
         <Grid item xs={6}>
-          <ThermostatToggle setting={props.airSetting} />
+          <ThermostatToggle
+            setting={props.airSetting}
+            setAirSetting={onAirChange}
+          />
         </Grid>
       </Grid>
     </Fragment>
@@ -144,10 +152,13 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     stopChannel: () => dispatch(stopChannel()),
     setAdjustedTemperature: (change: 'increment' | 'decrement') =>
       dispatch(setAdjustedTemperature(change)),
-    getInitialThermostatControls: () =>
-      dispatch(getInitialThermostatControls()),
+    getInitialThermostatSettings: () =>
+      dispatch(getInitialThermostatSettings()),
     setFanSetting: (setting: 'on' | 'auto') => {
       dispatch(setFanSetting(setting));
+    },
+    setAirSetting: (setting: 'ac' | 'off' | 'heat') => {
+      dispatch(setAirSetting(setting));
     },
   };
 };

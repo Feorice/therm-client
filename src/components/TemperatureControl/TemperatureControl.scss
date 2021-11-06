@@ -1,43 +1,43 @@
 .CurrentTemp {
-	font-size: 8rem;
-	line-height: 6rem;
-	display: inline-block;
-	vertical-align: middle;
+  font-size: 8rem;
+  line-height: 6rem;
+  display: inline-block;
+  vertical-align: middle;
 
-	span {
-		font-size: 2rem;
-		line-height: 1.5rem;
-		vertical-align: top;
-	}
+  span {
+    font-size: 2rem;
+    line-height: 1.5rem;
+    vertical-align: top;
+  }
 }
 
 .ControlsContainer {
-	display: inline-block;
-	vertical-align: middle;
+  display: inline-block;
+  vertical-align: middle;
 
-	.Controls {
-		position: relative;
+  .Controls {
+    position: relative;
 
-		svg {
-			width: 4rem;
-			height: 4rem;
-			display: block;
-		}
+    svg {
+      width: 4rem;
+      height: 4rem;
+      display: block;
+    }
 
-		.ControlUp {
-			margin-bottom: -.6rem;
-			margin-top: -2.5rem;
-		}
+    .ControlUp {
+      margin-bottom: -0.6rem;
+      margin-top: -2.5rem;
+    }
 
-		.ControlDown {
-			margin-bottom: -2rem;
-			margin-top: -.6rem;
-		}
+    .ControlDown {
+      margin-bottom: -2rem;
+      margin-top: -0.6rem;
+    }
 
-		.SetTemp {
-			top: 3.2rem;
-			left: 1.15rem;
-			font-size: 1.5rem;
-		}
-	}
+    .SetTemp {
+      top: 3.2rem;
+      left: 1.15rem;
+      font-size: 1.5rem;
+    }
+  }
 }

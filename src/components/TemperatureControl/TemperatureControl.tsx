@@ -47,7 +47,10 @@ const TemperatureControl = (props: ITemperatureControlProps) => {
 
 // In hindsight, this is stupid. Do something else. We won't get accurate adjustments this way.
 const convertTemperatureUnit = (value: number, unit: 'C' | 'F') => {
-  return unit === 'C' ? value : (value * (9 / 5) + 32).toFixed(0);
+  // return unit === 'C'
+  //   ? ((value - 32) / (9 / 5)).toFixed(0)
+  //   : (value * (9 / 5) + 32).toFixed(0);
+  return value;
 };
 
 export default TemperatureControl;

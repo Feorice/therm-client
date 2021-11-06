@@ -15,7 +15,7 @@ import { Dispatch } from 'redux';
 
 import {
   setTemperatureUnit,
-  getInitialThermostatControls,
+  getInitialThermostatSettings,
   startChannel,
   stopChannel,
 } from '../../redux/modules/thermostat';
@@ -50,7 +50,7 @@ const Settings = (props: any) => {
   }, []);
 
   useEffect(() => {
-    props.getInitialThermostatControls();
+    props.getInitialThermostatSettings();
   }, [props.serverStatus]);
 
   return (
@@ -85,7 +85,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   startChannel: () => dispatch(startChannel()),
   stopChannel: () => dispatch(stopChannel()),
   setTemperatureUnit: (unit: 'C' | 'F') => dispatch(setTemperatureUnit(unit)),
-  getInitialThermostatControls: () => dispatch(getInitialThermostatControls()),
+  getInitialThermostatSettings: () => dispatch(getInitialThermostatSettings()),
 });
 
 const mapStateToProps = (state: any) => ({

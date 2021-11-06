@@ -1,5 +1,5 @@
 import { io, Socket } from 'socket.io-client';
-import { eventChannel } from 'redux-saga';
+import { eventChannel, EventChannel } from 'redux-saga';
 import {
   take,
   call,
@@ -10,9 +10,7 @@ import {
   delay,
   all,
 } from 'redux-saga/effects';
-// import { createSelector } from 'reselect';
 
-// const ADD_TASK = 'ADD_TASK';
 const START_CHANNEL = 'START_CHANNEL';
 const STOP_CHANNEL = 'STOP_CHANNEL';
 const CHANNEL_ON = 'CHANNEL_ON';
@@ -21,18 +19,21 @@ const SERVER_ON = 'SERVER_ON';
 const SERVER_OFF = 'SERVER_OFF';
 const UPDATE_THERMOSTAT_METRICS = 'UPDATE_THERMOSTAT_METRICS';
 const SET_ADJUSTED_TEMPERATURE = 'SET_ADJUSTED_TEMPERATURE';
-const UPDATE_THERMOSTAT_CONTROLS = 'UPDATE_THERMOSTAT_CONTROLS';
+const UPDATE_THERMOSTAT_SETTINGS = 'UPDATE_THERMOSTAT_SETTINGS';
 const SET_TEMPERATURE_UNIT = 'SET_TEMPERATURE_UNIT';
-const GET_INITIAL_THERMOSTAT_CONTROLS = 'GET_INITIAL_THERMOSTAT_CONTROLS';
-const SET_FAN_CONTROL = 'SET_FAN_CONTROL';
+const GET_INITIAL_THERMOSTAT_SETTINGS = 'GET_INITIAL_THERMOSTAT_SETTINGS';
+const SET_FAN_SETTING = 'SET_FAN_SETTING';
+const SET_AIR_SETTING = 'SET_AIR_SETTING';
 const socketServerURL = 'http://192.168.1.102:8080';
 
 const initialState = {
   channelStatus: 'off',
   serverStatus: 'unknown',
+  thermostatMetrics: {},
+  thermostatSettings: {},
   currentHumidity: 0,
   currentTemperature: 0,
-  adjustedTemperature: 10, // Based on 10 degrees Celcius. Would be 50 degrees Fahrenheit.
+  adjustedTemperature: 50,
   temperatureUnit: 'C',
   fanSetting: 'auto',
   airSetting: 'off',
@@ -54,9 +55,11 @@ export default (
       return { ...state, serverStatus: 'on' };
     case UPDATE_THERMOSTAT_METRICS:
       return { ...state, ...action.payload };
-    case UPDATE_THERMOSTAT_CONTROLS:
+    case UPDATE_THERMOSTAT_SETTINGS:
       return { ...state, ...action.payload };
-    case SET_FAN_CONTROL:
+    case SET_FAN_SETTING:
+      return { ...state, ...action.payload };
+    case SET_AIR_SETTING:
       return { ...state, ...action.payload };
     default:
       return state;
@@ -65,22 +68,32 @@ export default (
 
 // action creators. You can also put them into componentDidMount (what?)
 export const startChannel = () => ({ type: START_CHANNEL });
+
 export const stopChannel = () => ({ type: STOP_CHANNEL });
+
 export const setAdjustedTemperature = (change: 'increment' | 'decrement') => {
   socket.emit('setAdjustedTemperature', { change });
   return { type: SET_ADJUSTED_TEMPERATURE };
 };
+
 export const setTemperatureUnit = (unit: 'C' | 'F') => {
   socket.emit('setTemperatureUnit', { unit });
   return { type: SET_TEMPERATURE_UNIT };
 };
-export const getInitialThermostatControls = () => {
-  socket.emit('getInitialThermostatControls', {});
-  return { type: GET_INITIAL_THERMOSTAT_CONTROLS };
+
+export const getInitialThermostatSettings = () => {
+  socket.emit('getInitialThermostatSettings', {});
+  return { type: GET_INITIAL_THERMOSTAT_SETTINGS };
 };
+
 export const setFanSetting = (fanSetting: 'on' | 'auto') => {
-  socket.emit('setControls', { fanSetting });
-  return { type: SET_FAN_CONTROL };
+  socket.emit('setSettings', { fanSetting });
+  return { type: SET_FAN_SETTING };
+};
+
+export const setAirSetting = (airSetting: 'ac' | 'off' | 'heat') => {
+  socket.emit('setSettings', { airSetting });
+  return { type: SET_AIR_SETTING };
 };
 
 export const currentTemperatureSelector = (state: any) =>
@@ -141,19 +154,19 @@ const createThermostatMetricsChannel = (socket: Socket) =>
   });
 
 // This sets up a channel to receive temperature and humidity updates from backend.
-const createThermostatControlsChannel = (socket: Socket) =>
+const createThermostatSettingsChannel = (socket: Socket) =>
   eventChannel((emit) => {
     const handler = (data: unknown) => emit(data);
 
     // channels.forEach((channel) => socket.on(channel, handler));
 
-    socket.on('updateThermostatControls', handler);
-    socket.on('respondInitialThermostatControls', handler);
+    socket.on('updateThermostatSettings', handler);
+    socket.on('respondInitialThermostatSettings', handler);
 
     return () => {
       // channels.forEach((channel) => socket.off(channel, handler));
-      socket.off('updateThermostatControls', handler);
-      socket.off('respondInitialThermostatControls', handler);
+      socket.off('updateThermostatSettings', handler);
+      socket.off('respondInitialThermostatSettings', handler);
     };
   });
 
@@ -173,7 +186,7 @@ const listenConnectSaga = function* () {
 };
 
 // Saga to switch on channel.
-const listenServerSaga = function* () {
+const listenServerSaga = function* (): Generator<any, any, any> {
   try {
     yield put({ type: CHANNEL_ON });
 
@@ -186,18 +199,18 @@ const listenServerSaga = function* () {
       yield put({ type: SERVER_OFF });
     }
 
-    const socket = yield call(connect);
-    const thermostatMetricsSocketChannel = yield call(
+    const socket: Socket = yield call(connect);
+    const thermostatMetricsSocketChannel: EventChannel<unknown> = yield call(
       createThermostatMetricsChannel,
       socket,
     );
 
     // const thermostatControlChannels = [
-    //   'updateThermostatControls',
-    //   'respondInitialThermostatControls',
+    //   'updateThermostatSettings',
+    //   'respondInitialThermostatSettings',
     // ];
-    const thermostatControlsSocketChannel = yield call(
-      createThermostatControlsChannel,
+    const thermostatSettingsSocketChannel: EventChannel<unknown> = yield call(
+      createThermostatSettingsChannel,
       socket,
       // thermostatControlChannels,
     );
@@ -208,7 +221,7 @@ const listenServerSaga = function* () {
     yield all([
       fork(function* () {
         while (true) {
-          const thermostatMetricsPayload = yield take(
+          const thermostatMetricsPayload: any = yield take(
             thermostatMetricsSocketChannel,
           );
 
@@ -220,13 +233,13 @@ const listenServerSaga = function* () {
       }),
       fork(function* () {
         while (true) {
-          const thermostatControlsPayload = yield take(
-            thermostatControlsSocketChannel,
+          const thermostatSettingsPayload: any = yield take(
+            thermostatSettingsSocketChannel,
           );
 
           yield put({
-            type: UPDATE_THERMOSTAT_CONTROLS,
-            payload: thermostatControlsPayload,
+            type: UPDATE_THERMOSTAT_SETTINGS,
+            payload: thermostatSettingsPayload,
           });
         }
       }),

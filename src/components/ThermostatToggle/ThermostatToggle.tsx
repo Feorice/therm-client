@@ -8,14 +8,14 @@ import HeatIcon from '@material-ui/icons/WhatshotOutlined';
 
 const ThermostatToggle = (props: any) => {
   const airSetting = props.setting;
-  const [alignment, setAlignment] = React.useState('off');
 
   const handleChange = (
     event: React.MouseEvent<HTMLElement>,
     newAlignment: string,
   ) => {
     if (newAlignment !== null) {
-      setAlignment(newAlignment);
+      console.log(newAlignment);
+      props.setAirSetting(newAlignment);
     }
   };
 
@@ -24,7 +24,7 @@ const ThermostatToggle = (props: any) => {
       <Grid item>
         <ToggleButtonGroup
           size='large'
-          value={airSetting || alignment}
+          value={airSetting}
           exclusive
           onChange={handleChange}
         >
